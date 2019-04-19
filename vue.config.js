@@ -1,9 +1,12 @@
- let configs = {
+module.exports = {
     devServer:{
         port:2020,
         open:true,
     },
-    productionSourceMap:false
+    productionSourceMap:false,
+    chainWebpack:config=>{
+
+    }
 }
-module.exports = configs;
+
 

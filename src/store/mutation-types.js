@@ -1,0 +1,8 @@
+
+//登陆
+export const USER_LOGIN = 'USER_LOGIN'
+
+//登陆状态
+export const LOGIN_STATUS = 'LOGIN_STATUS'
+export const LOGIN_STATUS_GETTER = 'LOGIN_STATUS_GETTER'
+export const LOGIN_STATUS_SETTER = 'LOGIN_STATUS_SETTER'
