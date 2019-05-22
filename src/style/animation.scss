@@ -1,0 +1,90 @@
+//fade-left
+.fade-left-enter-to{
+    transition:all .3s;
+}
+.fade-left-enter{
+    transform: translateX(150px);
+    opacity: 0;
+}
+
+
+//fade-right
+.fade-right-enter-to{
+    transition:all .3s;
+}
+.fade-right-enter{
+    transform: translateX(-150px);
+    opacity: 0;
+}
+
+//sider-left
+.sider-left-enter-to{
+    transition:all .3s;
+}
+.sider-left-enter{
+    transform: translateX(150px);
+}
+
+
+//sider-right
+.sider-right-enter-to{
+    transition:all .3s;
+}
+.sider-right-enter{
+    transform: translateX(-150px);
+}
+
+//sider-top
+.sider-top-enter-active,.sider-top-leave-active{
+    transition: all .3s;
+}
+.sider-top-enter,.sider-top-leave-to{
+    transform: translateY(150%);
+}
+
+
+
+
+//sider-bottom
+.side-bottom-enter-to{
+    transition: all .3s;
+}
+.sider-bottom-enter{
+    transform: translateY(-150%)
+}
+
+//fade
+//fade-left
+.fade-left-enter-to{
+    transition:all .3s;
+}
+.fade-left-enter{
+    transform: translateX(150px);
+    opacity: 0;
+}
+
+
+//fade-right
+.fade-right-enter-to{
+    transition:all .3s;
+}
+.fade-right-enter{
+    transform: translateX(-150px);
+    opacity: 0;
+}
+
+
+//旋转动画
+.rotate{
+    animation: round 10s linear infinite;
+}
+
+.rotate-pause{
+    animation-play-state: paused;
+}
+
+@keyframes round{
+    100%{
+        transform: rotate(1turn);
+    }
+}

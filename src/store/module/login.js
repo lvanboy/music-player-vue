@@ -33,28 +33,34 @@ mutations[types.LOGIN_STATUS_SETTER] = (state, data) => {
   state[types.LOGIN_STATUS] = data;
 };
 
-actions[types.USER_LOGIN_STATUS] = ({commit}, data) => {
+actions[types.USER_LOGIN] = ({commit}, data) => {
   let url = data.type == 'phone'
     ? API.login.USER_LOGIN_PHONE
     : API.login.USER_LOGIN_EMAIL;
   return new Promise ((resolve, reject) => {
+    //data对象中应包含{phone|emial & password}
     axios.get (url, {params: {...data}}).then (res => {resolve(res)}, err => {reject(err)});
   });
 };
 
 actions[types.LOGIN_STATUS_SETTER] = ({commit}) => {
   return new Promise ((resolve, reject) => {
+    //获取登陆状态
     axios.get (API.login.USER_LOGIN_STATUS).then (
       res => {
-        if (res.data.code == 301) {
-          reject (new Error ('未登陆或者登陆身份过期'));
+        if (res.data.bindings[0]&&res.data.bindings[0].expired) {
+          commit (types.LOGIN_STATUS_SETTER, {});
+          reject (new Error ('登陆身份过期'));
           router.push ('/login');
           return;
         }
+        //保存登陆信息
         commit (types.LOGIN_STATUS_SETTER, res.data);
         resolve (res);
       },
       err => {
+        commit (types.LOGIN_STATUS_SETTER, {});
+        console.log('获取登陆状态报错')
         reject (err);
         router.push ('/login');
       }

@@ -1,7 +1,7 @@
 <template lang='pug'>
   #app
    router-view
-  </div>
+ 
 </template>
 
 <script>
@@ -24,7 +24,8 @@ export default {
   color: #2c3e50;
   height: 100%;
   margin:0 auto;
-  max-width: 475px;
+  /* 规定显示的最大尺寸*/
+  /* max-width: 675px; */
 }
 body,html{
   width:100%;
@@ -32,5 +33,7 @@ body,html{
   box-sizing: border-box;
   margin:0;
   padding:0;
+  /*固定字体大小，整体调整通过rem*/
+  /* font-size:30px; */
 }
 </style>

@@ -1,0 +1,58 @@
+
+//使用rem转化公式
+@function px2rem($rem){
+    @return $rem / 7.5 * 10;
+}
+// 通用导航栏高度
+$auto_ht: px2rem(1rem);
+// 通用导航栏高度小号
+$auto_ht_sm:px2rem(0.8rem);
+
+
+//主色
+$primary_color: rgb(203, 40, 41);
+
+//主淡色
+$primary_color_s:#e75e4e;
+
+//主深色
+$primary_color_d:#C2473B;
+
+//登陆按钮文字大小|头部title文字大小
+$fsize_auto_l: px2rem(0.34rem);
+
+//登陆input框输入文字大小
+$fsize_auto_s: px2rem(0.32rem);
+
+$fsize_nav_l:px2rem(0.5rem);
+
+
+
+//几个等级的小号字体，后缀如衣服尺码s,x,m,l,
+$fsize_small_s:px2rem(0.2rem);
+$fsize_small_x:px2rem(0.24rem);
+$fsize_small_m:px2rem(0.26rem);
+$fsize_small_l:px2rem(0.28rem);
+
+//边框通用色
+$border-color:#ccc;
+
+//字体图标颜色 | 按钮通用色
+$icon-color:#aaa;
+
+//导航字体图标颜色
+$icon-nav-color:#f2817b;
+
+//导航字体颜色
+$icon-text-color:#f3e4cd;
+
+//通用文本颜色
+$text-color:#353535;
+
+//主页面左右内边距
+$page-padding-lr:0 px2rem(0.15rem);
+
+//主页面上内边距
+$page-padding-t:px2rem(.3rem);
+
+
