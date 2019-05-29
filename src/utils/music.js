@@ -78,6 +78,7 @@ const Music = {
 
     //设置音量
     setVol(vol) {
+        console.log(vol)
         this.audioEle.volume = vol / 100;
         store.dispatch('MUSIC_VOL_SETTER', vol / 100);
     },

@@ -21,12 +21,13 @@
                 span.icon-xiazai
                 span.icon-pinglun
                 span.icon-gengduo
-            .lrc(v-show='isShowLRC' @click='toggleContent')
+            .lrc(v-show='isShowLRC' )
               .vol-area
+                //音量进度条
                 TouchBar(color='#ccc' :curProgress='musicVol*100' @setMusicProgress='setVol' type='vol')
                   .left(slot='left-sider')
                     span.icon-laba1
-              .lrc-area
+              .lrc-area(@click='toggleContent')
                   Lrc(:songID='currentMusicInfo.id' :curTime='currentTime')
             .play-conf
               .play-progress
@@ -281,9 +282,8 @@ export default {
         justify-content: center;
         align-items: center;
         .cd {
-          width: 65%;
-          height: 65%;
-
+          width: px2rem(4.5rem);
+          height: px2rem(4.5rem);
           overflow: hidden;
           img {
             box-sizing: border-box;
@@ -304,6 +304,7 @@ export default {
       }
     }
     .lrc {
+      overflow:hidden;
       .vol-area {
         display: flex;
         width: 95%;
@@ -337,7 +338,7 @@ export default {
           display: flex;
           justify-content: center;
           align-items: center;
-          width: px2rem(0.8rem);
+          // width: px2rem(0.8rem);
           font-size: $fsize_small_s;
           color: #fff;
           opacity: 0.9;

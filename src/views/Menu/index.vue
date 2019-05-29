@@ -9,6 +9,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang='scss'>
+.menu-container{
+    position:absolute;
+    top:$auto_ht;
+}
 </style>

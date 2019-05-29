@@ -155,7 +155,9 @@ let Router = new vueRouter({
                     name:'search',
                     component:Search,
                     meta:{
-                        transition:'fade-left'
+                        transition:'fade-left',
+                        keepAlive:true,
+                        // nopanel:true,
                     }
                 },
                 //私人fm

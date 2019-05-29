@@ -10,6 +10,7 @@
   "dependencies": {
     "better-scroll": "^1.15.2",
     "core-js": "^2.6.5",
+    "d-js-utils": "^1.0.9",
     "node-vibrant": "3.0.0",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "vue": "^2.6.10",

@@ -64,6 +64,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
+   z-index: 999;
   .music-sider-mask {
     position: absolute;
     top: 0;
@@ -71,10 +72,12 @@ export default {
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.3);
+  
   }
   .music-sider {
     position: absolute;
     bottom: 0;
+ 
     width: 100%;
     background: #f6f6f6;
     display: flex;

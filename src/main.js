@@ -22,6 +22,8 @@ import 'amfe-flexible'
 //该组件需要引入
 import Msg from 'vue-message'
 
+import Dutils from 'd-js-utils'
+
 Vue.use(Msg, {
   text: 'Hello world', duration: 3000, background: 'rgba(7,17,27,0.6)'
 })
@@ -31,7 +33,8 @@ Vue.config.productionTip = false
 Object.keys(filters).forEach((key)=>{
   Vue.filter(key,filters[key])
 })
-
+//挂载工具
+Vue.prototype.$dutils = Dutils
 let MusicAPP = new Vue({
   store,
   router,

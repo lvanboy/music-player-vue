@@ -49,6 +49,10 @@ export default {
             this.lrcCode = 1;
             //解析歌词
             this.lrcList = music.parseLrc(rawLrc);
+            //获取到歌词，但解析不到歌词，为纯音乐
+            if(!this.lrcList.length) {
+              this.lrcCode = 2;
+            }
           } else {
             this.lrcCode = 3;
           }

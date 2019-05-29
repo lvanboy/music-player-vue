@@ -1,9 +1,9 @@
 <template lang='pug'>
     .sheet-list-container(:id='sid')
         .sheet-left(@click='play(index,sid)')
-            .cover-wrapper
+            .cover-wrapper(v-if='avatar.length')
                 //请求小图片，节省带宽
-                img(v-imgsize="{url:avatar,w:120}" v-if='!isplay')
+                img(v-imgsize="{url:avatar,w:100}" v-if='!isplay')
                 span.icon-laba(v-else)
             .song-info
                 h3 {{name}}
@@ -86,10 +86,12 @@ export default {
     justify-content: flex-start;
     align-items: center;
     .cover-wrapper {
+      flex:0 0 px2rem(0.8rem);
       width: px2rem(0.8rem);
       height: px2rem(0.8rem);
-      line-height: px2rem(0.8rem);
-      text-align: center;
+      //用于居中播放图标
+      line-height: px2rem(.8rem);
+      text-align:center;
       border-radius: px2rem(0.1rem);
       margin-right: px2rem(0.1rem);
       overflow: hidden;
@@ -105,7 +107,8 @@ export default {
       }
     }
     .song-info {
-      width: 100%;
+      // width: 100%;
+      height:px2rem(0.8rem);
       text-align: left;
       display: flex;
       flex-direction: column;

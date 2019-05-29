@@ -78,7 +78,7 @@ export default {
   top: $auto_ht;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: $auto_ht;
   background-color: $primary_color;
   .scroll-content {
     position: relative;

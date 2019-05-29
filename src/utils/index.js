@@ -39,5 +39,16 @@ export default {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random()*(max-min) + min) //不包括最大值，包含最小值。
+    },
+
+    //数组去重
+    removeRepeat(arr){
+        for(let i = 0;i<arr.length;i++){
+            if(arr.indexOf(arr[i])!=i|| arr[i]===null){
+                arr.splice(i,1);
+                i--;
+            }
+        }
+        return arr;
     }
 }

@@ -59,6 +59,7 @@ export default {
         this.barWidth,
         Math.max(0, this.startOffsetLeft + (this.movePageX - this.startPageX))
       );
+
       //得到接触点的偏移百分比
       this.dataProgress = Math.floor(moveDistance / this.barWidth * 100);
       //将dom元素与接触点同步
@@ -68,6 +69,7 @@ export default {
     },
     rangeTouchEnd(e) {
       this.initiated = false;
+      console.log('dataprogres',this.dataProgress)
       this.$emit('setMusicProgress',this.dataProgress);
     },
     offset() {
@@ -94,7 +96,8 @@ export default {
     }
   },
   mounted() {
-    this.barWidth = this.$refs.bar.offsetWidth;
+    //display:none的元素如何获取属性，隐藏元素这里宽度获取为0，即不占用空间。
+    this.barWidth = this.$refs.bar.offsetWidth ||  100;
   }
 };
 </script>
