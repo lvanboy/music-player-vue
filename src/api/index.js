@@ -69,6 +69,31 @@ const API = {
     },
 
 
+    //歌单
+    songlist:{
+        //热门歌单分类名称
+        HOTNAME:'/playlist/hot',
+        //全部歌单分类名称
+        CATEGONAME:'/playlist/catlist',
+        /*
+        获取歌单信息
+        可选参数 : order: 可选值为 'new' 和 'hot', 分别对应最新和最热 , 默认为 'hot'
+        cat:cat: tag, 比如 " 华语 "、" 古风 " 、" 欧美 "、" 流行 ", 默认为 "全部",可从歌单分类接口获取(/playlist/catlist)
+        */
+       CATEINFO:'/top/playlist',
+       //精品歌单信息
+       /*
+        limit: 取出歌单数量 , 默认为 20
+        before: 分页参数,取上一页最后一个歌单的 updateTime 获取下一页数据
+       */
+       CATEINFOHIGH:'/top/playlist/highquality',
+       //歌单详情
+       DETAIL:'/playlist/detail'
+
+
+    },
+
+
     storage:{
         SEARCH_RECORD:'keywords'
     }

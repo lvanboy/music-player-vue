@@ -185,7 +185,8 @@ let Router = new vueRouter({
                     name:'songsheet',
                     component:Sheet ,
                     meta:{
-                        transition:'fade'
+                        transition:'sider-top',
+                        keepAlive:true,
                     }
                 },
                 //排行榜

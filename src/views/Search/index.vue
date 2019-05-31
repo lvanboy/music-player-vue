@@ -276,7 +276,7 @@ input[type="search"]::-webkit-search-cancel-button {
     align-content: center;
     padding: px2rem(0.1rem) px2rem(0.3rem);
     box-sizing: border-box;
-
+    font-size: $fsize_auto_l;
     .search-header-lt,
     .search-header-right {
       flex: 0 0 px2rem(1rem);
@@ -365,7 +365,6 @@ input[type="search"]::-webkit-search-cancel-button {
     }
     .type-item {
       flex: 0 0 px2rem(1.5rem);
-      // width:px2rem(1.5rem);
       height: $auto_ht;
       // line-height: $auto_ht;
       font-size: $fsize_auto_l;

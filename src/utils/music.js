@@ -250,10 +250,13 @@ const Music = {
     },
     //从图片中获取近似色用于设置进度条颜色
     setProgressColor(pic) {
+        let color ;
         Vibrant.from(pic).getPalette().then((palette) => {
-            let color = `rgba(${palette.LightMuted.r},${palette.LightMuted.g},${palette.LightMuted.b},.9)`;
+            color = `rgba(${palette.LightMuted.r},${palette.LightMuted.g},${palette.LightMuted.b},.9)`;
             store.dispatch('MUSIC_PLAYING_COLOR_SETTER', color);
+            
         })
+        return color;
     },
 
     //设置播放类型

@@ -82,6 +82,7 @@ export default {
   background-color: $primary_color;
   .scroll-content {
     position: relative;
+    background: #fff;
     .slider {
       position: relative;
       &::after {

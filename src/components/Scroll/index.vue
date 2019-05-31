@@ -5,8 +5,9 @@
                 .content
                     slot(name='scroll-content')
                     .pullup-wrapper(v-if='canPullUp')
-                        .before-trigger
-                            Loading(:vertical='false',height:'60px')
+                        .before-trigger(v-if='isMore')
+                            Loading(:vertical='false' height='60px')
+                        .no-more(v-else) 没有更多数据了.
 </template>
 
 <script>
@@ -15,7 +16,7 @@ import BScroll from "better-scroll";
 export default {
   data() {
     return {
-      scroll: null
+      scroll: null,
     };
   },
   props: {
@@ -39,9 +40,13 @@ export default {
       type: Boolean,
       default: false
     },
-    isSnap:{
-        type:Boolean,
-        default:false,
+    isSnap: {
+      type: Boolean,
+      default: false
+    },
+    isMore:{
+      type:Boolean,
+      default:true,
     }
   },
   methods: {
@@ -51,15 +56,16 @@ export default {
     initScroll() {
       let params = {};
       //上拉刷新参数
-      let pullUpRefresh = {
+      let pullDownRefresh = {
         threshold: 50,
         stop: 20
       };
-      let pullDownLoad = {
+      let pullUpLoad = {
         threshold: 50
       };
-      if (this.canPullUp) params.pullUpRefresh = pullUpRefresh;
-      if (this.canPullDown) params.pullDownLoad = pullDownLoad;
+      if (this.canPullUp) params.pullDownRefresh = pullDownRefresh;
+      if (this.canPullDown) params.pullUpLoad = pullUpLoad;
+
       this.scroll = new BScroll(this.$refs.wrapper, {
         click: this.click,
         //这个配置用于 PC 端的鼠标滚轮
@@ -74,51 +80,60 @@ export default {
       });
       //初始化事件
       this._resize();
-      if (this.canPullDown) {
-        this._initPullDown();
-        this._finishPullDown();
-      }
-      if (this.canPullUp) {
-        this._initPullUp();
-        this._finishPullUp();
-      }
+
+      this._initPullDown();
+      this._finishPullDown();
+      this._initPullUpm();
+      this._initPullUp();
+      this._finishPullUp();
     },
     //重新计算 better-scroll，当 DOM 结构发生变化的时候务必要调用确保滚动的效果正常。
-    _refresh(){
-        this.scroll&&this.scroll.refresh()
+    _refresh() {
+      this.scroll && this.scroll.refresh();
     },
     _resize() {
-        window.addEventListener('resize',()=>{
-            if(!this.scroll||!this.scroll.enabled){
-                return 
-            }
-            clearInterval(this.resizeTimer)
-            this.resizeTimer = setTimeout(() => {
-                this._refresh()
-            }, 60);
-        })
+      window.addEventListener("resize", () => {
+        if (!this.scroll || !this.scroll.enabled) {
+          return;
+        }
+        clearInterval(this.resizeTimer);
+        this.resizeTimer = setTimeout(() => {
+          this._refresh();
+        }, 60);
+      });
     },
     _initPullUp() {
-        this.scroll.on('pullingUp',()=>{
-            this.$emit('pullingUp',this)
-        })
+      this.scroll.on("pullingUp", () => {
+        this.$emit("pullingUp", this);
+      });
+    },
+    _initPullUpm(){
+      this.scroll.on('touchend',(pos)=>{
+        console.log('pos',pos.y);
+        if(pos.y<50){
+          this.$emit('nextPage',this);
+        }
+      })
     },
     _initPullDown() {
-        this.scroll.on('pullingDown',()=>{
-            this.$emit('pullingDown',this)
-        })
+      this.scroll.on("pullingDown", () => {
+        this.$emit("pullingDown", this);
+      });
     },
     _finishPullUp() {
-        this.scroll&&this.scroll.finishPullDown()
+      this.scroll && this.scroll.finishPullUp();
     },
     _finishPullDown() {
-        this.scroll&&this.scroll.finishPullUp()
+      this.scroll && this.scroll.finishPullDown();
     }
   },
-  mounted(){
-      this.$nextTick(()=>{
-          this.initScroll()
-      })
+  mounted() {
+    this.$nextTick(() => {
+      let _this = this;
+      setTimeout(function() {
+        _this.initScroll();
+      });
+    });
   },
   components: {
     Loading
@@ -127,31 +142,32 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.bt-scroll{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: hidden;
-    .wrapper{
-        width:100%;
-        height: 100%;
-        .content{
-            position: absolute;
-            z-index: 1;
-            width:100%;
-            background-color: #fff;
-            .pullup-wrapper{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width:100%;
-                .before-trigger{
-                    font-size: $fsize_small_x;
-                }
-            }
+.bt-scroll {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  .wrapper {
+    width: 100%;
+    height: 100%;
+    .content {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      .pullup-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        font-size: $fsize_small_x;
+        .before-trigger {
+          
         }
+        
+      }
     }
+  }
 }
 </style>
