@@ -83,7 +83,7 @@ export default {
 
       this._initPullDown();
       this._finishPullDown();
-      this._initPullUpm();
+      
       this._initPullUp();
       this._finishPullUp();
     },
@@ -107,14 +107,7 @@ export default {
         this.$emit("pullingUp", this);
       });
     },
-    _initPullUpm(){
-      this.scroll.on('touchend',(pos)=>{
-        console.log('pos',pos.y);
-        if(pos.y<50){
-          this.$emit('nextPage',this);
-        }
-      })
-    },
+
     _initPullDown() {
       this.scroll.on("pullingDown", () => {
         this.$emit("pullingDown", this);

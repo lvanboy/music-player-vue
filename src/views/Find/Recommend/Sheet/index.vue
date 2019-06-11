@@ -1,7 +1,7 @@
 <template lang='pug'>
     .sheet-container
             .blur(:style="{backgroundImage:`url(${activeSwiperImg}?params=150y150)`}" class='light')
-            Scroll(:canPullUp='true' @pullingUp='getMore' @nextPage='getMore' :isMore='isMore')
+            Scroll(:canPullUp='true' @pullingUp='getMore' :isMore='isMore')
                 .header-wp(slot='scroll-header')
                     .blur(:style="{backgroundImage:`url(${activeSwiperImg}?params=150y150)`}" class='light')
                     .header
@@ -14,8 +14,8 @@
                         .type-all
                             span.icon-caidan1
                 .scroll-content(slot='scroll-content')
-                    .swiper-wp(v-if='swiperInfo&&swiperInfo.length&&includeSwiper')
-                            .item(v-if="idx<3" v-for="(item,idx) in swiperInfo" :key='idx' :class="swiperIndex===idx?'active':''")
+                    .swiper-wp(v-if='swiperSheet&&swiperSheet.length&&includeSwiper')
+                            .item(v-if="idx<3" v-for="(item,idx) in swiperSheet" :key='idx' :class="swiperIndex===idx?'active':''")
                                 .cover
                                     img(:src="item.coverImgUrl+'?param=150y150'")
                                     .play-count
@@ -43,7 +43,7 @@
                 .all(@click='setSubCat("")' :class='subCat==""?"active":""') 全部歌单
                 .vlist
                   .item(v-if='idx<20' v-for='(item,idx) in allCateName' :key='idx' @click='setSubCat(item.name)' :class='subCat===item.name?"active":""') {{item.name}}
-
+            SheetType
 </template>
 
 <script>
@@ -52,14 +52,15 @@ import axios from "@/utils/";
 import api from "@/api/";
 import music from "@/utils/music.js";
 import PopUp from "@/components/PopUp/";
+import SheetType from './SheetType/'
 export default {
   data() {
     return {
       hotCateName: [],
       allCateName: [],
-      swiperInfo: [],
+      swiperSheet: [],
       recomSheet: [],
-      categories: { 0: "语种", 1: "风格", 2: "场景", 3: "情感", 4: "主题" },
+      // categories: { 0: "语种", 1: "风格", 2: "场景", 3: "情感", 4: "主题" },
       curIndex: 0,
       isPopUp: false,
       includeSwiper: true,
@@ -67,12 +68,12 @@ export default {
       isFilter: false,
       isMore: true,
       swiperIndex: 0,
-      limit: 30,
-      offset: 0,
-      cat: "全部",
-      subCat: "",
+      limit: 12,
+      offset: 3,
+      cat: "",
       //精选歌单分类参数，,取上一页最后一个歌单的 updateTime 获取下一页数据
-      before: 0
+      before: 0,
+      subCat: ""
     };
   },
   methods: {
@@ -92,61 +93,66 @@ export default {
       this.allCateName = res.data.sub;
     },
     //获取推荐歌单
-    async getHotInfo() {
-      this.offset = 0;
-      this.limit = 30;
-      this.recomSheet = [];
-      console.log(this.cat);
-      let requestUrl = api.songlist.CATEINFO;
-      if (this.cat === "全部") {
-        this.includeSwiper = true;
-      } else if (this.cat === "精品") {
-        requestUrl = api.songlist.CATEINFOHIGH;
-        this.isHigh = true;
-        //默认获取全部歌单的cat不需要值
-        this.cat = "";
-        //打开筛选框，并且选择了喜欢的分类。
-        if (this.isPopUp && this.subCat != "") {
-          this.cat = this.subCat;
-          this.isFilter = true;
-        }
-      }
-      let res = await axios.fetchData(requestUrl, {
+    async getHotInfo(limit = 12, offset = 0, cat = "") {
+      let res = await axios.fetchData(api.songlist.CATEINFO, {
+        limit,
+        offset,
+        cat
+      });
+
+      return res.data.playlists;
+    },
+
+    //获取swiper歌单
+    async getSwiperSheet() {
+      this.swiperSheet = await this.getHotInfo(3, 0);
+    },
+
+    //获取精品歌单
+    async getHighSheet() {
+      let res = await axios.fetchData(api.songlist.CATEINFOHIGH, {
         limit: this.limit,
-        offset: this.offset,
+        before: this.before,
         cat: this.cat
       });
-      if (this.isHigh && res.data.playlists && res.data.playlists.length) {
-        this.before =
-          res.data.playlists[res.data.playlists.length - 1].updateTime;
-        console.log(this.before);
-      }
-
-      if (this.includeSwiper) {
-        for (let i = 0; i < 3; i++) {
-          this.swiperInfo.push(res.data.playlists[i]);
-        }
-        for (let i = 3; i < this.limit; i++) {
-          this.recomSheet.push(res.data.playlists[i]);
-        }
-      } else {
-        this.recomSheet = res.data.playlists;
-      }
+      this.recomSheet = this.recomSheet.concat(res.data.playlists);
     },
+
+    //获取热门推荐歌单
+    async getHotSheet() {
+      let data = await this.getHotInfo(this.limit, this.offset, this.cat);
+      this.recomSheet = this.recomSheet.concat(data);
+    },
+
     //设置当前索引
     setIndex(index, catename) {
-      if (catename === "推荐") {
-        catename = "全部";
-      } else {
-        this.includeSwiper = false;
-      }
       //防止反复点击。
       if (index !== this.curIndex) {
         this.isMore = true;
-        this.isHigh = false;
         this.curIndex = index;
+        this.recomSheet = [];
         this.cat = catename;
-        this.getHotInfo();
+        this.isHigh = false;
+        this.includeSwiper = false;
+        //初始化请求参数
+        this.limit = 12;
+        this.offset = 0;
+        this.before = 0;
+        if (catename === "推荐" || "") {
+          this.cat = "";
+          this.includeSwiper = true;
+          this.offset = 3;
+        } else if (catename === "精品") {
+          this.cat = "";
+          this.isHigh = true;
+        }
+        if (this.isHigh) {
+          //保持筛选
+          if (this.isFilter) this.cat = this.subCat;
+          this.getHighSheet();
+        } else {
+          this.getHotSheet();
+        }
       }
     },
 
@@ -155,82 +161,50 @@ export default {
       if (catename == "") {
         this.isFilter = false;
       }
-      this.cat = "精品";
-      this.isHigh = true;
+      this.isFilter = true;
+      this.recomSheet = [];
       this.subCat = catename;
-      this.getHotInfo();
+      this.cat = catename;
+      this.before = 0;
+      this.getHighSheet();
       this.isPopUp = false;
       this.isMore = true;
     },
 
-    //获取更多数据
+    //下拉获取推荐歌单
     async getMore(that) {
-      that.scroll.refresh();
-      this.limit = 12;
-      let res;
-
       if (!this.isHigh) {
-        res = await axios.fetchData(api.songlist.CATEINFO, {
-          limit: this.limit,
-          offset: this.offset,
-          cat: this.cat
-        });
-        if (!res.data.more) {
-          this.isMore = false;
-          //直接返回，将无法继续下次加载更多
-          //调用finish函数，将反复触发。
-          return;
-        }
         this.offset += this.limit;
-
-        console.log("推荐和其他", this.cat);
-      } else {
-        let cat = "";
-        if (this.isFilter) {
-          console.log("子类");
-          cat = this.subCat;
-        } else {
-          console.log("精品全部分页");
-          cat = "";
-        }
-        res = await axios.fetchData(api.songlist.CATEINFOHIGH, {
-          limit: this.limit,
-          cat: cat,
-          before: this.before
-        });
-        if (!res.data.more) {
-          this.isMore = false;
-          return;
-        }
-        this.before =
-          res.data.playlists[res.data.playlists.length - 1].updateTime;
-        console.log(this.before);
+        await this.getHotSheet();
+      }else{
+        this.before=this.recomSheet[this.recomSheet.length-1].updateTime;
+        await this.getHighSheet();
       }
-      console.log(this.recomSheet.length);
-      this.recomSheet = this.recomSheet.concat(res.data.playlists);
 
-      that.scroll.finishPullUp();
       that.scroll.refresh();
+      that.scroll.finishPullUp();
     }
   },
   components: {
     Scroll,
-    PopUp
+    PopUp,
+    SheetType
   },
   computed: {
     activeSwiperImg() {
       if (
-        this.swiperInfo.length &&
-        this.swiperInfo[this.swiperIndex] !== void 0
+        this.swiperSheet.length &&
+        this.swiperSheet[this.swiperIndex] !== void 0
       ) {
-        return this.swiperInfo[this.swiperIndex].coverImgUrl;
+        return this.swiperSheet[this.swiperIndex].coverImgUrl;
       }
     }
   },
   activated() {
     this.getHotLabel();
     this.getAllLabel();
-    this.getHotInfo();
+    this.getSwiperSheet();
+    this.getHotSheet();
   }
 };
 </script>
@@ -327,7 +301,7 @@ export default {
   .scroll-content {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    // justify-content: space-between;
     box-sizing: border-box;
     padding: px2rem(0.3rem) px2rem(0.2rem);
     // overflow: auto;
@@ -433,8 +407,10 @@ export default {
       }
     }
     .sheet-item {
-      flex: 0 0 30%;
+      width:30%;
       margin-bottom: px2rem(0.5rem);
+      margin-left:px2rem(.2rem);
+      box-sizing: border-box;
       .cover {
         width: px2rem(2rem);
         height: px2rem(2rem);
@@ -462,6 +438,7 @@ export default {
         }
       }
       .des {
+        width:px2rem(2rem);
         font-size: $fsize_small_s;
         text-align: left;
         box-sizing: border-box;
